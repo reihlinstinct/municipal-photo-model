@@ -41,8 +41,22 @@ class PrivacyTests(unittest.TestCase):
         for token in tokens:
             self.assertTrue(self.scan_text(token))
 
+    def test_separated_phones(self):
+        for groups in [('02', '123', '4567'), ('054', '123', '4567'), ('054', '123', '45678')]:
+            for separator in ['-', ' ']:
+                self.assertTrue(self.scan_text(separator.join(groups)))
+
+    def test_additional_tokens(self):
+        for token in ['AS' + 'IA' + 'A' * 16, 'x' + 'app-' + 'a' * 24]:
+            self.assertTrue(self.scan_text(token))
+
+    def test_non_utf8(self):
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / 'sample.txt').write_bytes(bytes([255, 254, 253]))
+            self.assertIn('unreadable UTF-8', scanner.scan(Path(d))[0])
+
     def test_additional_media(self):
-        for extension in ['gif', 'bmp', 'tif', 'tiff', 'mp4']:
+        for extension in ['gif', 'bmp', 'tif', 'tiff', 'mp4', 'svg', 'mov', 'webm', 'avi', 'jfif', 'wav', 'mp3']:
             self.assertTrue(self.scan_text('synthetic', 'sample.' + extension))
 
     def test_hyphenated_plates(self):
