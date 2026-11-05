@@ -20,7 +20,14 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
         "FUNDING.yml",
@@ -45,7 +52,14 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
         "bug_report.md",
@@ -68,7 +82,14 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
         "tests.yml"
@@ -99,7 +120,14 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
         ".gitignore",
@@ -130,7 +158,14 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
         "DESIGN.md"
@@ -152,7 +187,14 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
         "municipal_photo_baseline.ipynb"
@@ -176,7 +218,14 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
         "check_structure.py",
@@ -200,7 +249,14 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
         "README.md"
@@ -223,7 +279,14 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
         "test_municipal_photo_manifest.py",
