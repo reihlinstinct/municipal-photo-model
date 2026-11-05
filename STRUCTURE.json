@@ -144,7 +144,8 @@
     },
     "docs": {
       "allow": [
-        "DESIGN.md"
+        "DESIGN.md",
+        "RUN-SAFETY.md"
       ],
       "forbid": [
         "*.jpg",
@@ -168,7 +169,8 @@
         "*.mp3"
       ],
       "required": [
-        "DESIGN.md"
+        "DESIGN.md",
+        "RUN-SAFETY.md"
       ]
     },
     "notebooks": {
@@ -204,7 +206,9 @@
       "allow": [
         "check_structure.py",
         "municipal_photo_manifest.py",
-        "public_data_scan.py"
+        "public_data_scan.py",
+        "train_bounded.py",
+        "training_worker.py"
       ],
       "forbid": [
         "*.jpg",
@@ -230,7 +234,9 @@
       "required": [
         "check_structure.py",
         "municipal_photo_manifest.py",
-        "public_data_scan.py"
+        "public_data_scan.py",
+        "train_bounded.py",
+        "training_worker.py"
       ]
     },
     "synthetic": {
@@ -265,7 +271,8 @@
     "tests": {
       "allow": [
         "test_municipal_photo_manifest.py",
-        "test_public_checks.py"
+        "test_public_checks.py",
+        "test_run_safety.py"
       ],
       "forbid": [
         "*.jpg",
@@ -290,7 +297,8 @@
       ],
       "required": [
         "test_municipal_photo_manifest.py",
-        "test_public_checks.py"
+        "test_public_checks.py",
+        "test_run_safety.py"
       ]
     }
   }
