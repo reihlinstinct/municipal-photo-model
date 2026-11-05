@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "purpose": "public code and synthetic tests only",
+  "paths": {
+    "docs/": "design before implementation",
+    "scripts/": "local-only preparation and public-tree check",
+    "tests/": "synthetic unit tests",
+    "notebooks/": "unexecuted guarded training baseline",
+    "synthetic/": "fixture policy, no real images",
+    "requirements-test.txt": "pinned test dependency",
+    ".github/workflows/": "container CI, no private inputs"
+  },
+  "excluded": [
+    "images",
+    "private manifests",
+    "case records",
+    "personal source evidence",
+    "credentials"
+  ]
+}
