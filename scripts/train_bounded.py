@@ -50,6 +50,7 @@ def supervise(command, *, total_seconds=2700.0, stage_seconds=None, idle_seconds
     stage = 'setup'
     stage_start = last_progress = start
     last_step = 0
+    heartbeat_progress = 0
     reason = 'worker_failed'
     order = list(STAGES)
     try:
@@ -74,7 +75,12 @@ def supervise(command, *, total_seconds=2700.0, stage_seconds=None, idle_seconds
                 next_stage = event['stage']
                 if order.index(next_stage) != order.index(stage) + 1:
                     reason = 'invalid_stage'; break
-                stage = next_stage; stage_start = last_progress = now
+                stage = next_stage; stage_start = last_progress = now; heartbeat_progress = 0
+            elif set(event) == {'heartbeat', 'progress'} and event['heartbeat'] == stage:
+                progress = event['progress']
+                if type(progress) is not int or progress <= heartbeat_progress:
+                    reason = 'invalid_progress'; break
+                heartbeat_progress = progress; last_progress = now
             elif set(event) == {'step', 'loss'} and stage == 'train':
                 step, loss = event['step'], event['loss']
                 if type(step) is not int or step != last_step + 1 or step > 100:
@@ -90,7 +96,12 @@ def supervise(command, *, total_seconds=2700.0, stage_seconds=None, idle_seconds
             os.killpg(process.pid, signal.SIGKILL)
         except ProcessLookupError:
             pass
-        process.wait(timeout=5)
+        try:
+            process.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            reason = 'cleanup_timeout'
+            # Do not hide failure or block forever waiting for an unkillable child.
+            threading.Thread(target=process.wait, daemon=True).start()
         reader.join(timeout=1)
     return reason
 
@@ -98,7 +109,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', required=True, help='Approved reviewed dataset directory')
     args = parser.parse_args()
-    reason = supervise([sys.executable, '-u', str(Path(__file__).with_name('training_worker.py')), '--root', args.root])
+    reason = supervise([sys.executable, '-I', '-u', str(Path(__file__).with_name('training_worker.py')), '--root', args.root])
     print(json.dumps({'result': reason}), flush=True)
     return 0 if reason == 'ok' else 1
 

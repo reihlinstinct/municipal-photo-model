@@ -9,24 +9,39 @@ if sys.version_info < (3, 11):
     raise SystemExit("Python 3.11 or newer is required")
 
 def run(args, emit):
+    import torch
+    if not torch.cuda.is_available():
+        raise ValueError('CUDA required')
+    emit(heartbeat='setup', progress=1)
+    setup_progress = 1
     from pathlib import Path
     import json, hashlib, random
     ROOT = Path(args.root)
     manifest = json.loads((ROOT / 'manifest.reviewed.json').read_text())
     LABELS = ['sidewalk_parking', 'red_white', 'crosswalk_obstruction']
-    assert manifest, 'No reviewed manifest'
+    if not (manifest):
+        raise ValueError('No reviewed manifest')
     for row in manifest:
-        assert row['review_status'] == 'approved_visual_event_and_target', 'Review images/events/target boxes first'
-        assert row['split'] in {'train','val','test'}
-        assert row['target_vehicle_box'] is not None
-        assert all(row['label_state'][label] in {'present','absent'} for label in LABELS)
+        if not (row['review_status'] == 'approved_visual_event_and_target'):
+            raise ValueError('Review images/events/target boxes first')
+        if not (row['split'] in {'train','val','test'}):
+            raise ValueError('Review or data validation failed')
+        if not (row['target_vehicle_box'] is not None):
+            raise ValueError('Review or data validation failed')
+        if not (all(row['label_state'][label] in {'present','absent'} for label in LABELS)):
+            raise ValueError('Review or data validation failed')
+        setup_progress += 1
+        emit(heartbeat='setup', progress=setup_progress)
         path = ROOT / row['image']
-        assert hashlib.sha256(path.read_bytes()).hexdigest() == row['image_sha256']
+        if not (hashlib.sha256(path.read_bytes()).hexdigest() == row['image_sha256']):
+            raise ValueError('Review or data validation failed')
     # Whole-location/event groups never cross partitions.
     seen={}
     for row in manifest:
-        assert seen.setdefault(row['group_id'], row['split']) == row['split'], 'Group leakage'
-    assert {r['split'] for r in manifest} == {'train','val','test'}
+        if not (seen.setdefault(row['group_id'], row['split']) == row['split']):
+            raise ValueError('Group leakage')
+    if not ({r['split'] for r in manifest} == {'train','val','test'}):
+        raise ValueError('Review or data validation failed')
     
     import torch
     from torch import nn
@@ -34,7 +49,6 @@ def run(args, emit):
     from torchvision import models, transforms
     from PIL import Image
     random.seed(329); torch.manual_seed(329)
-    assert torch.cuda.is_available(), 'CUDA required'
     device = 'cuda'
     transform = models.ResNet18_Weights.DEFAULT.transforms()
     class Photos(Dataset):
@@ -46,13 +60,17 @@ def run(args, emit):
             y=torch.tensor([r['label_state'][k]=='present' for k in LABELS],dtype=torch.float32)
             return x,y
     train=Photos('train'); val=Photos('val'); test=Photos('test')
-    assert min(len(train),len(val),len(test))>0
+    if not (min(len(train),len(val),len(test))>0):
+        raise ValueError('Review or data validation failed')
     # Weight download occurs only during separately approved notebook execution.
+    setup_progress += 1
+    emit(heartbeat='setup', progress=setup_progress)
     model=models.resnet18(weights=models.ResNet18_Weights.DEFAULT)
     for p in model.parameters(): p.requires_grad=False
     model.fc=nn.Linear(model.fc.in_features,len(LABELS));model.to(device)
     y=torch.stack([train[i][1] for i in range(len(train))]); pos=y.sum(0)
-    assert torch.all(pos>0) and torch.all(pos<len(train)), 'Need positive and negative examples per class'
+    if not (torch.all(pos>0) and torch.all(pos<len(train))):
+        raise ValueError('Need positive and negative examples per class')
     loss_fn=nn.BCEWithLogitsLoss(pos_weight=((len(train)-pos)/pos).to(device))
     optimizer=torch.optim.Adam(model.fc.parameters(),lr=1e-3)
     train_loader=DataLoader(train,batch_size=16,shuffle=True,num_workers=0)
@@ -65,7 +83,8 @@ def run(args, emit):
         for x,y in train_loader:
             if steps >= 100: break
             optimizer.zero_grad();loss=loss_fn(model(x.to(device)),y.to(device))
-            assert torch.isfinite(loss), 'Nonfinite loss'
+            if not (torch.isfinite(loss)):
+                raise ValueError('Nonfinite loss')
             loss.backward();optimizer.step()
             steps += 1
             emit(step=steps, loss=float(loss.detach().cpu()))
@@ -75,10 +94,14 @@ def run(args, emit):
     
     from sklearn.metrics import precision_recall_fscore_support, average_precision_score
     import numpy as np
+    evaluation_progress = 0
     @torch.no_grad()
     def predict(ds):
+        nonlocal evaluation_progress
         model.eval();probs=[];truth=[]
         for x,y in DataLoader(ds,batch_size=16,num_workers=0):
+            evaluation_progress += 1
+            emit(heartbeat='evaluate', progress=evaluation_progress)
             probs.append(model(x.to(device)).sigmoid().cpu().numpy());truth.append(y.numpy())
         return np.concatenate(probs),np.concatenate(truth)
     vp,vy=predict(val)

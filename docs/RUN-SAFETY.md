@@ -20,3 +20,5 @@ Important limit: stopping a process does not guarantee Kaggle releases an alloca
 Source: https://www.kaggle.com/docs/notebooks
 
 CLI: python scripts/train_bounded.py --root APPROVED_PRIVATE_PATH. --root is the reviewed dataset directory. Notebook calls the same API. API supervise(command, total_seconds, stage_seconds, idle_seconds) accepts only positive budgets no greater than production caps; shorter values support synthetic tests. Outcome is a reason code; non-ok means no automatic rerun. Nothing here uploads data or starts a Kaggle session.
+
+Progress heartbeats are allowed in every stage and must increase a stage-local counter. They reset only idle time, never stage/total deadlines. Cleanup timeout returns a safe failure code instead of masking it with an exception. Worker gates use explicit exceptions (also under optimized Python), and launch uses isolated mode. CUDA availability is checked before private manifest load/hash.
