@@ -15,7 +15,12 @@
         "*.csv",
         "*.parquet",
         "*.zip",
-        "*.pdf"
+        "*.pdf",
+        "*.gif",
+        "*.bmp",
+        "*.tif",
+        "*.tiff",
+        "*.mp4"
       ],
       "required": [
         "FUNDING.yml",
@@ -35,7 +40,12 @@
         "*.csv",
         "*.parquet",
         "*.zip",
-        "*.pdf"
+        "*.pdf",
+        "*.gif",
+        "*.bmp",
+        "*.tif",
+        "*.tiff",
+        "*.mp4"
       ],
       "required": [
         "bug_report.md",
@@ -53,7 +63,12 @@
         "*.csv",
         "*.parquet",
         "*.zip",
-        "*.pdf"
+        "*.pdf",
+        "*.gif",
+        "*.bmp",
+        "*.tif",
+        "*.tiff",
+        "*.mp4"
       ],
       "required": [
         "tests.yml"
@@ -79,7 +94,12 @@
         "*.csv",
         "*.parquet",
         "*.zip",
-        "*.pdf"
+        "*.pdf",
+        "*.gif",
+        "*.bmp",
+        "*.tif",
+        "*.tiff",
+        "*.mp4"
       ],
       "required": [
         ".gitignore",
@@ -105,7 +125,12 @@
         "*.csv",
         "*.parquet",
         "*.zip",
-        "*.pdf"
+        "*.pdf",
+        "*.gif",
+        "*.bmp",
+        "*.tif",
+        "*.tiff",
+        "*.mp4"
       ],
       "required": [
         "DESIGN.md"
@@ -122,7 +147,12 @@
         "*.csv",
         "*.parquet",
         "*.zip",
-        "*.pdf"
+        "*.pdf",
+        "*.gif",
+        "*.bmp",
+        "*.tif",
+        "*.tiff",
+        "*.mp4"
       ],
       "required": [
         "municipal_photo_baseline.ipynb"
@@ -141,7 +171,12 @@
         "*.csv",
         "*.parquet",
         "*.zip",
-        "*.pdf"
+        "*.pdf",
+        "*.gif",
+        "*.bmp",
+        "*.tif",
+        "*.tiff",
+        "*.mp4"
       ],
       "required": [
         "check_structure.py",
@@ -160,7 +195,12 @@
         "*.csv",
         "*.parquet",
         "*.zip",
-        "*.pdf"
+        "*.pdf",
+        "*.gif",
+        "*.bmp",
+        "*.tif",
+        "*.tiff",
+        "*.mp4"
       ],
       "required": [
         "README.md"
@@ -178,7 +218,12 @@
         "*.csv",
         "*.parquet",
         "*.zip",
-        "*.pdf"
+        "*.pdf",
+        "*.gif",
+        "*.bmp",
+        "*.tif",
+        "*.tiff",
+        "*.mp4"
       ],
       "required": [
         "test_municipal_photo_manifest.py",

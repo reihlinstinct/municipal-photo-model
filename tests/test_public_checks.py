@@ -24,6 +24,27 @@ class PrivacyTests(unittest.TestCase):
     def test_plain_plate(self):
         self.assertTrue(self.scan_text(''.join(['123', '4567'])))
 
+    def test_long_identifiers_and_phones(self):
+        for length in [7, 9, 10, 12, 20]:
+            self.assertTrue(self.scan_text('1' * length))
+        self.assertTrue(self.scan_text('-'.join(['054', '123', '4567'])))
+
+    def test_token_families(self):
+        tokens = [
+            'github_' + 'pat_' + 'A' * 30,
+            'AK' + 'IA' + 'A' * 16,
+            'xox' + 'b-' + 'a' * 20,
+            'xox' + 'p-' + 'a' * 20,
+            's' + 'k-' + 'a' * 30,
+            'ey' + 'J' + 'a' * 12 + '.' + 'b' * 12 + '.' + 'c' * 12,
+        ]
+        for token in tokens:
+            self.assertTrue(self.scan_text(token))
+
+    def test_additional_media(self):
+        for extension in ['gif', 'bmp', 'tif', 'tiff', 'mp4']:
+            self.assertTrue(self.scan_text('synthetic', 'sample.' + extension))
+
     def test_hyphenated_plates(self):
         for pieces in [('12', '345', '67'), ('123', '45', '678')]:
             self.assertTrue(self.scan_text('-'.join(pieces)))
