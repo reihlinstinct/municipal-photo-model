@@ -1,0 +1,15 @@
+name: Synthetic code and privacy checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  synthetic-tests:
+    runs-on: ubuntu-24.04
+    container: python:3.12.12-slim-bookworm
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: python -m pip install -r requirements-test.txt
+      - run: python -m unittest discover -s tests -v
+      - run: python scripts/public_data_scan.py .
