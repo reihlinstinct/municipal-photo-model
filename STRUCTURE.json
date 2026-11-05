@@ -1,20 +1,189 @@
 {
-  "version": 1,
-  "purpose": "public code and synthetic tests only",
-  "paths": {
-    "docs/": "design before implementation",
-    "scripts/": "local-only preparation and public-tree check",
-    "tests/": "synthetic unit tests",
-    "notebooks/": "unexecuted guarded training baseline",
-    "synthetic/": "fixture policy, no real images",
-    "requirements-test.txt": "pinned test dependency",
-    ".github/workflows/": "container CI, no private inputs"
-  },
-  "excluded": [
-    "images",
-    "private manifests",
-    "case records",
-    "personal source evidence",
-    "credentials"
-  ]
+  "version": 2,
+  "purpose": "Public code and synthetic tests only; unknown folders denied",
+  "folders": {
+    ".github": {
+      "allow": [
+        "FUNDING.yml",
+        "PULL_REQUEST_TEMPLATE.md",
+        "dependabot.yml"
+      ],
+      "forbid": [
+        "*.jpg",
+        "*.jpeg",
+        "*.png",
+        "*.csv",
+        "*.parquet",
+        "*.zip",
+        "*.pdf"
+      ],
+      "required": [
+        "FUNDING.yml",
+        "PULL_REQUEST_TEMPLATE.md",
+        "dependabot.yml"
+      ]
+    },
+    ".github/ISSUE_TEMPLATE": {
+      "allow": [
+        "bug_report.md",
+        "feature_request.md"
+      ],
+      "forbid": [
+        "*.jpg",
+        "*.jpeg",
+        "*.png",
+        "*.csv",
+        "*.parquet",
+        "*.zip",
+        "*.pdf"
+      ],
+      "required": [
+        "bug_report.md",
+        "feature_request.md"
+      ]
+    },
+    ".github/workflows": {
+      "allow": [
+        "tests.yml"
+      ],
+      "forbid": [
+        "*.jpg",
+        "*.jpeg",
+        "*.png",
+        "*.csv",
+        "*.parquet",
+        "*.zip",
+        "*.pdf"
+      ],
+      "required": [
+        "tests.yml"
+      ]
+    },
+    ".": {
+      "allow": [
+        ".gitignore",
+        "ACCESSIBILITY.md",
+        "CODE_OF_CONDUCT.md",
+        "CONTRIBUTING.md",
+        "LICENSE",
+        "README.md",
+        "SECURITY.md",
+        "STRUCTURE.json",
+        "pyproject.toml",
+        "requirements-test.txt"
+      ],
+      "forbid": [
+        "*.jpg",
+        "*.jpeg",
+        "*.png",
+        "*.csv",
+        "*.parquet",
+        "*.zip",
+        "*.pdf"
+      ],
+      "required": [
+        ".gitignore",
+        "ACCESSIBILITY.md",
+        "CODE_OF_CONDUCT.md",
+        "CONTRIBUTING.md",
+        "LICENSE",
+        "README.md",
+        "SECURITY.md",
+        "STRUCTURE.json",
+        "pyproject.toml",
+        "requirements-test.txt"
+      ]
+    },
+    "docs": {
+      "allow": [
+        "DESIGN.md"
+      ],
+      "forbid": [
+        "*.jpg",
+        "*.jpeg",
+        "*.png",
+        "*.csv",
+        "*.parquet",
+        "*.zip",
+        "*.pdf"
+      ],
+      "required": [
+        "DESIGN.md"
+      ]
+    },
+    "notebooks": {
+      "allow": [
+        "municipal_photo_baseline.ipynb"
+      ],
+      "forbid": [
+        "*.jpg",
+        "*.jpeg",
+        "*.png",
+        "*.csv",
+        "*.parquet",
+        "*.zip",
+        "*.pdf"
+      ],
+      "required": [
+        "municipal_photo_baseline.ipynb"
+      ]
+    },
+    "scripts": {
+      "allow": [
+        "check_structure.py",
+        "municipal_photo_manifest.py",
+        "public_data_scan.py"
+      ],
+      "forbid": [
+        "*.jpg",
+        "*.jpeg",
+        "*.png",
+        "*.csv",
+        "*.parquet",
+        "*.zip",
+        "*.pdf"
+      ],
+      "required": [
+        "check_structure.py",
+        "municipal_photo_manifest.py",
+        "public_data_scan.py"
+      ]
+    },
+    "synthetic": {
+      "allow": [
+        "README.md"
+      ],
+      "forbid": [
+        "*.jpg",
+        "*.jpeg",
+        "*.png",
+        "*.csv",
+        "*.parquet",
+        "*.zip",
+        "*.pdf"
+      ],
+      "required": [
+        "README.md"
+      ]
+    },
+    "tests": {
+      "allow": [
+        "test_municipal_photo_manifest.py",
+        "test_public_checks.py"
+      ],
+      "forbid": [
+        "*.jpg",
+        "*.jpeg",
+        "*.png",
+        "*.csv",
+        "*.parquet",
+        "*.zip",
+        "*.pdf"
+      ],
+      "required": [
+        "test_municipal_photo_manifest.py",
+        "test_public_checks.py"
+      ]
+    }
+  }
 }

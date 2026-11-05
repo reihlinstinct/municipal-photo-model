@@ -1,5 +1,8 @@
 """Local-only candidate manifest. No network, training or export authority."""
 from __future__ import annotations
+import sys
+if sys.version_info < (3, 11):
+    raise SystemExit("Python 3.11 or newer is required")
 import hashlib
 import json
 from pathlib import Path

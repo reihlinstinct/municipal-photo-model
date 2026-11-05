@@ -20,7 +20,6 @@ class ManifestTests(unittest.TestCase):
             self.assertEqual(source.read_bytes(),before)
             with self.assertRaises(ValueError):m.strip_metadata(source,source)
             with self.assertRaises(ValueError):m.strip_metadata(source,target)
-if __name__=='__main__':unittest.main()
 
 class NotebookTests(unittest.TestCase):
     def test_notebook_syntax_and_review_gate(self):
@@ -31,3 +30,5 @@ class NotebookTests(unittest.TestCase):
         self.assertIn('approved_visual_event_and_target',code)
         self.assertIn('Group leakage',code)
         self.assertNotIn('kaggle.api',code)
+
+if __name__=='__main__':unittest.main()

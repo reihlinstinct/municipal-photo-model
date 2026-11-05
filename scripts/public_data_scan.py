@@ -1,5 +1,8 @@
 """Fail-closed public-tree hygiene check; supplements, never replaces review."""
 from __future__ import annotations
+import sys
+if sys.version_info < (3, 11):
+    raise SystemExit("Python 3.11 or newer is required")
 import json,re,sys
 from pathlib import Path
 
@@ -13,6 +16,7 @@ def scan(root: Path) -> list[str]:
         text=p.read_text(encoding='utf-8')
         # Case numbers, long plate-shaped standalone digits, keys and secrets.
         if re.search(r'(?<![0-9])[0-9]{7,9}(?![0-9])',text):problems.append(str(rel)+': long numeric identifier')
+        if re.search(r'(?<![0-9])[0-9]{2}-[0-9]{3}-[0-9]{2}(?![0-9])|(?<![0-9])[0-9]{3}-[0-9]{2}-[0-9]{3}(?![0-9])',text):problems.append(str(rel)+': hyphenated plate-like identifier')
         if re.search(r'\b[0-9]{4}-[0-9]{6,}(?:/[0-9]+)?\b',text):problems.append(str(rel)+': case-like identifier')
         if re.search(r'(?:gh[pousr]_[A-Za-z0-9]{20,}|' + '-'*5 + r'BEGIN .*PRIVATE KEY)',text):problems.append(str(rel)+': secret-like token')
         if p.name=='manifest.proposals.json' or p.name=='source-index.json':problems.append(str(rel)+': private manifest')
