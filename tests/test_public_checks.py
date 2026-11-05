@@ -41,6 +41,11 @@ class PrivacyTests(unittest.TestCase):
         for token in tokens:
             self.assertTrue(self.scan_text(token))
 
+    def test_space_separated_number_list_fails_closed(self):
+        groups = ['80', '443', '8080']
+        self.assertTrue(self.scan_text('ports: ' + ' '.join(groups)))
+        self.assertEqual(self.scan_text('ports: ' + ', '.join(groups)), [])
+
     def test_separated_phones(self):
         for groups in [('02', '123', '4567'), ('054', '123', '4567'), ('054', '123', '45678')]:
             for separator in ['-', ' ']:
