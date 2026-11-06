@@ -24,3 +24,11 @@ See [contributing](CONTRIBUTING.md), [security](SECURITY.md), [accessibility](AC
 The scanner deliberately fails closed. Space-separated numeric lists can resemble phone numbers and be flagged even when they are harmless (for example, a list of ports). Write number lists with commas. This is an accepted false positive, not evidence of private data. A passing scan still does not prove privacy: manual review is required, and unsupported secrets or personal text may evade pattern checks.
 
 Bounded run CLI and API: see [run-safety design](docs/RUN-SAFETY.md). The notebook calls a separate supervised worker; no upload/run approval is inferred. Remote GPU session shutdown still needs external Stop/Cancel and verification.
+
+## Private human label review
+
+Use the local Hebrew RTL review tool to inspect target/plate boxes, municipal
+classification and baseline labels, with explicit human approvals and group-safe
+exports. It never uploads data or starts training. See [label review](docs/LABEL-REVIEW.md)
+for input schema, local/phone access, privacy rules and the private dataset return
+workflow. Real input and review state must remain outside this public checkout.
