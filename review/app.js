@@ -15,7 +15,17 @@ async function request(path, body) {
 function defaults(row) {
   return {label_state:Object.fromEntries(data.labels.map(k=>[k,'unknown'])),target_vehicle_box:null,plate_box:null,plate_text:'',municipal_category:typeof row.municipal_category==='string'?row.municipal_category:(typeof row.city_label==='string'?row.city_label:''),plate_status:'unknown',split:'unassigned',reviewer:'',event_checked:false,visual_checked:false,notes:'',exclusion_reason:''};
 }
+function parseBox(numbers) {
+  const values=[...numbers.querySelectorAll('input')].map(input=>{
+    const text=input.value.trim();
+    return text!=='' && input.validity.valid && Number.isFinite(input.valueAsNumber)?input.valueAsNumber:null;
+  });
+  return values.length===4 && values.every(value=>value!==null)?values:null;
+}
 function readForm() {
+  for(const key of ['target_vehicle_box','plate_box']) {
+    review[key]=parseBox(document.querySelector(`[data-box="${key}"]`));
+  }
   review.municipal_category=$('municipal').value; review.plate_text=$('plateText').value;
   review.plate_status=$('plateStatus').value; review.split=$('split').value; review.reviewer=$('reviewer').value;
   review.event_checked=$('event').checked; review.visual_checked=$('visual').checked;
@@ -28,14 +38,13 @@ function coordinates() {
   for(const [key,title] of [['target_vehicle_box','רכב'],['plate_box','לוחית']]) {
     const section=document.createElement('div'); section.className='boxrow';
     const heading=document.createElement('strong'); heading.textContent=title+(review[key]?'':' · ללא תיבה'); section.append(heading);
-    const numbers=document.createElement('div'); numbers.className='numbers';
+    const numbers=document.createElement('div'); numbers.className='numbers'; numbers.dataset.box=key;
     ['x1','y1','x2','y2'].forEach((coordinate,j)=>{
       const label=document.createElement('label'); label.textContent=coordinate;
       const input=document.createElement('input'); input.type='number'; input.min='0'; input.step='1'; input.value=review[key]?.[j]??'';
       input.setAttribute('aria-label',title+' '+coordinate);
-      input.addEventListener('change',()=>{
-        const values=[...numbers.querySelectorAll('input')].map(x=>x.value===''?null:Number(x.value));
-        if(values.every(x=>x!==null && Number.isFinite(x))) review[key]=values;
+      input.addEventListener('input',()=>{
+        review[key]=parseBox(numbers);
         dirty=true; draw();
       }); label.append(input); numbers.append(label);
     }); section.append(numbers);

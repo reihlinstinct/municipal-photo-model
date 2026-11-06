@@ -40,6 +40,28 @@ with tempfile.TemporaryDirectory() as t:
           page.locator('#photo').scroll_into_view_if_needed();page.screenshot(path=str(output / f'review-{width}-boxes.png'))
           page.reload();expect(page.locator('#photo')).to_have_attribute('width','1000');assert page.locator('#reviewer').input_value()=='Synthetic human'
           page.locator('#plateText').fill('DEMO-EDIT');page.locator('#draft').click();expect(page.locator('#message')).to_contain_text('הטיוטה נשמרה')
+          # Regression: after a valid box, an incomplete/non-finite edit must
+          # clear the model box, never approve stale coordinates. Save must parse
+          # controls itself, even if no input/change event has fired.
+          for key,title in [('target_vehicle_box','רכב'),('plate_box','לוחית')]:
+            field=page.get_by_label(title+' x2',exact=True)
+            valid=field.input_value()
+            for invalid in ['', '1e999', '-']:
+              field.evaluate('(input,value)=>{input.value=value;}',invalid)
+              page.locator('#approve').click();expect(page.locator('#message')).to_contain_text('לא נשמר')
+              page.locator('#draft').click();expect(page.locator('#message')).to_contain_text('הטיוטה נשמרה')
+              stored=server.store.state['reviews']['synthetic-0.png']
+              assert stored[key] is None, (key,invalid,stored[key])
+              assert stored['decision']=='draft'
+              page.reload();expect(page.locator('#photo')).to_have_attribute('width','1000')
+              assert field.input_value()==''
+              # Restore all four controls without blur or synthetic change events.
+              box_values=[100,130,900,640] if key=='target_vehicle_box' else [380,430,580,490]
+              for coordinate,value in zip(['x1','y1','x2','y2'],box_values):
+                page.get_by_label(title+' '+coordinate,exact=True).evaluate('(input,value)=>{input.value=String(value);}',value)
+              page.locator('#draft').click();expect(page.locator('#message')).to_contain_text('הטיוטה נשמרה')
+              assert server.store.state['reviews']['synthetic-0.png'][key]==box_values
+          print('UI PASS',width,'clear/non-finite/partial box edits block approval and save null, no stale box')
           assert not errors,errors
           print('UI PASS',width,'two-tap boxes, explicit approve, reload, edit/draft, no horizontal overflow, no private OCR candidate')
           context.close()
