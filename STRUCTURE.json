@@ -20,7 +20,14 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
         "FUNDING.yml",
@@ -45,7 +52,14 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
         "bug_report.md",
@@ -68,7 +82,14 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
         "tests.yml"
@@ -99,7 +120,14 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
         ".gitignore",
@@ -116,7 +144,8 @@
     },
     "docs": {
       "allow": [
-        "DESIGN.md"
+        "DESIGN.md",
+        "RUN-SAFETY.md"
       ],
       "forbid": [
         "*.jpg",
@@ -130,10 +159,18 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
-        "DESIGN.md"
+        "DESIGN.md",
+        "RUN-SAFETY.md"
       ]
     },
     "notebooks": {
@@ -152,7 +189,14 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
         "municipal_photo_baseline.ipynb"
@@ -162,7 +206,9 @@
       "allow": [
         "check_structure.py",
         "municipal_photo_manifest.py",
-        "public_data_scan.py"
+        "public_data_scan.py",
+        "train_bounded.py",
+        "training_worker.py"
       ],
       "forbid": [
         "*.jpg",
@@ -176,12 +222,21 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
         "check_structure.py",
         "municipal_photo_manifest.py",
-        "public_data_scan.py"
+        "public_data_scan.py",
+        "train_bounded.py",
+        "training_worker.py"
       ]
     },
     "synthetic": {
@@ -200,7 +255,14 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
         "README.md"
@@ -209,7 +271,8 @@
     "tests": {
       "allow": [
         "test_municipal_photo_manifest.py",
-        "test_public_checks.py"
+        "test_public_checks.py",
+        "test_run_safety.py"
       ],
       "forbid": [
         "*.jpg",
@@ -223,11 +286,19 @@
         "*.bmp",
         "*.tif",
         "*.tiff",
-        "*.mp4"
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
       ],
       "required": [
         "test_municipal_photo_manifest.py",
-        "test_public_checks.py"
+        "test_public_checks.py",
+        "test_run_safety.py"
       ]
     }
   }
