@@ -213,7 +213,8 @@
         "public_data_scan.py",
         "train_bounded.py",
         "training_worker.py",
-        "review_server.py"
+        "review_server.py",
+        "predict.py"
       ],
       "forbid": [
         "*.jpg",
@@ -242,7 +243,8 @@
         "public_data_scan.py",
         "train_bounded.py",
         "training_worker.py",
-        "review_server.py"
+        "review_server.py",
+        "predict.py"
       ]
     },
     "synthetic": {
