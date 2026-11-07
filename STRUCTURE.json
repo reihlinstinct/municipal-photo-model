@@ -68,7 +68,8 @@
     },
     ".github/workflows": {
       "allow": [
-        "tests.yml"
+        "tests.yml",
+        "layout.yml"
       ],
       "forbid": [
         "*.jpg",
@@ -106,7 +107,8 @@
         "SECURITY.md",
         "STRUCTURE.json",
         "pyproject.toml",
-        "requirements-test.txt"
+        "requirements-test.txt",
+        ".repo-layout.yml"
       ],
       "forbid": [
         "*.jpg",
@@ -341,6 +343,33 @@
         "*.wav",
         "*.mp3"
       ]
+    },
+    "tools": {
+      "allow": [
+        "*.py"
+      ],
+      "forbid": [
+        "*.jpg",
+        "*.jpeg",
+        "*.png",
+        "*.csv",
+        "*.parquet",
+        "*.zip",
+        "*.pdf",
+        "*.gif",
+        "*.bmp",
+        "*.tif",
+        "*.tiff",
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
+      ],
+      "required": []
     }
   }
 }
