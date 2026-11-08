@@ -69,7 +69,8 @@
     ".github/workflows": {
       "allow": [
         "tests.yml",
-        "layout.yml"
+        "layout.yml",
+        "vuln-scan.yml"
       ],
       "forbid": [
         "*.jpg",
@@ -108,7 +109,8 @@
         "STRUCTURE.json",
         "pyproject.toml",
         "requirements-test.txt",
-        ".repo-layout.yml"
+        ".repo-layout.yml",
+        "deps-inventory.json"
       ],
       "forbid": [
         "*.jpg",
