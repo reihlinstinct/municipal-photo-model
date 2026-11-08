@@ -17,6 +17,9 @@ def scan(root: Path) -> list[str]:
             text=p.read_text(encoding='utf-8')
         except (UnicodeDecodeError, OSError):
             problems.append(str(rel)+': unreadable UTF-8 text file');continue
+        # Pinned 40-hex action SHAs in workflow uses: lines are not identifiers.
+        if len(rel.parts)>2 and rel.parts[0]=='.github' and rel.parts[1]=='workflows' and p.suffix in {'.yml','.yaml'}:
+            text='\n'.join(re.sub(r'(?<![0-9a-zA-Z])[0-9a-f]{40}(?![0-9a-zA-Z])','a'*40,line) if 'uses:' in line else line for line in text.split('\n'))
         # Case numbers, long plate-shaped standalone digits, keys and secrets.
         if re.search(r'(?<![0-9])[0-9]{7,}(?![0-9])',text):problems.append(str(rel)+': long numeric identifier')
         if re.search(r'(?<![0-9])[0-9]{2}-[0-9]{3}-[0-9]{2}(?![0-9])|(?<![0-9])[0-9]{3}-[0-9]{2}-[0-9]{3}(?![0-9])',text):problems.append(str(rel)+': hyphenated plate-like identifier')
