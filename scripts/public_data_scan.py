@@ -17,6 +17,9 @@ def scan(root: Path) -> list[str]:
             text=p.read_text(encoding='utf-8')
         except (UnicodeDecodeError, OSError):
             problems.append(str(rel)+': unreadable UTF-8 text file');continue
+        # 40-hex tokens are git object IDs (e.g. SHA-pinned actions), never
+        # personal identifiers; mask them before the numeric rules below.
+        text=re.sub(r'(?<![0-9a-fA-F])[0-9a-fA-F]{40}(?![0-9a-fA-F])','<git-object-id>',text)
         # Case numbers, long plate-shaped standalone digits, keys and secrets.
         if re.search(r'(?<![0-9])[0-9]{7,}(?![0-9])',text):problems.append(str(rel)+': long numeric identifier')
         if re.search(r'(?<![0-9])[0-9]{2}-[0-9]{3}-[0-9]{2}(?![0-9])|(?<![0-9])[0-9]{3}-[0-9]{2}-[0-9]{3}(?![0-9])',text):problems.append(str(rel)+': hyphenated plate-like identifier')
