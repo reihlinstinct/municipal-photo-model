@@ -55,6 +55,33 @@ class PrivacyTests(unittest.TestCase):
         for token in ['AS' + 'IA' + 'A' * 16, 'x' + 'app-' + 'a' * 24]:
             self.assertTrue(self.scan_text(token))
 
+    def scan_workflow(self, text, name='w.yml'):
+        with tempfile.TemporaryDirectory() as d:
+            wf = Path(d) / '.github' / 'workflows'
+            wf.mkdir(parents=True)
+            (wf / name).write_text(text)
+            return scanner.scan(Path(d))
+
+    def test_pinned_sha_in_uses_line_allowed(self):
+        sha = '0976a9cc34d3b34a5f8c65b459' + '53678bba92f0b2'
+        self.assertEqual(self.scan_workflow('  - uses: org/repo/.github/workflows/w.yml@' + sha + ' # v1.0.9'), [])
+
+    def test_digit_run_on_non_uses_line_still_flagged(self):
+        sha = '0976a9cc34d3b34a5f8c65b459' + '53678bba92f0b2'
+        flagged = self.scan_workflow('env:\n  TICKET: "1234567"\nsteps:\n  - uses: org/repo/w@' + sha)
+        self.assertTrue(any('long numeric' in p for p in flagged))
+
+    def test_non_hex_numeric_ref_in_uses_still_flagged(self):
+        self.assertTrue(self.scan_workflow('  - uses: foo/bar@' + '1' * 7))
+
+    def test_sha_outside_uses_line_still_flagged(self):
+        sha = '0976a9cc34d3b34a5f8c65b459' + '53678bba92f0b2'
+        self.assertTrue(self.scan_workflow('# see commit ' + sha))
+
+    def test_sha_in_non_workflow_file_still_flagged(self):
+        sha = '0976a9cc34d3b34a5f8c65b459' + '53678bba92f0b2'
+        self.assertTrue(self.scan_text('  - uses: org/repo/w@' + sha))
+
     def test_non_utf8(self):
         with tempfile.TemporaryDirectory() as d:
             (Path(d) / 'sample.txt').write_bytes(bytes([255, 254, 253]))
