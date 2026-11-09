@@ -14,3 +14,10 @@ Follow the shared code-layout standard in collaboration-docs docs/CODE-LAYOUT.md
 Order code by reading flow, put entry points before their helpers, and use
 marked section headers for longer files. Source files have a 400-line cap;
 test files have a 600-line cap and should split by topic above it.
+
+## Code-layout CI enforcement
+
+The Code layout workflow now fails on oversized source/test files or missing
+section headers under the shared code-layout standard. Its findings summary
+is still written on failure. Follow collaboration-docs docs/CODE-LAYOUT.md;
+keep new changes within the existing source (400) and test (600) line limits.
