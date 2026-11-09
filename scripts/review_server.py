@@ -17,6 +17,40 @@ from urllib.parse import urlsplit
 LABELS = ('sidewalk_parking', 'red_white', 'crosswalk_obstruction')
 APP = Path(__file__).resolve().parents[1] / 'review'
 
+# Section: Entry point
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--root', type=Path, required=True)
+    parser.add_argument('--candidates', type=Path, required=True)
+    parser.add_argument('--work', type=Path, required=True)
+    parser.add_argument('--bind', default='127.0.0.1')
+    parser.add_argument('--port', type=int, default=8765)
+    parser.add_argument('--cert', type=Path)
+    parser.add_argument('--key', type=Path)
+    args = parser.parse_args()
+    if args.bind not in {'127.0.0.1', '::1', 'localhost'} and not (args.cert and args.key):
+        parser.error('Phone/LAN access requires a trusted TLS certificate and key; no public hosting')
+    server = ThreadingHTTPServer((args.bind, args.port), Handler)
+    server.store = ReviewStore(args.root, args.candidates, args.work)
+    server.token = secrets.token_urlsafe(32)
+    if args.cert and args.key:
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        context.load_cert_chain(args.cert, args.key)
+        server.socket = context.wrap_socket(server.socket, server_side=True)
+    scheme = 'https' if args.cert and args.key else 'http'
+    print(f'Private local review: {scheme}://{args.bind}:{server.server_port}/#{server.token}', flush=True)
+    print('Keep this local address private. Ctrl-C stops the server. Drafts stay in --work.', flush=True)
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.server_close()
+
+
+# Section: Validation and local-file helpers
+
 def stamp():
     return datetime.now(timezone.utc).isoformat()
 
@@ -48,6 +82,8 @@ def atomic_json(path, data):
         output.flush()
         os.fsync(output.fileno())
     temporary.replace(path)
+
+# Section: Review storage
 
 class ReviewStore:
     def __init__(self, root, candidates, work):
@@ -216,6 +252,8 @@ class ReviewStore:
             atomic_json(self.work / 'review-audit.json', self.state)
             return output
 
+# Section: HTTP handling
+
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, *args):
         pass  # Do not log plate text, image names, token or private paths.
@@ -289,34 +327,6 @@ class Handler(BaseHTTPRequestHandler):
         except (ValueError, KeyError, TypeError, OSError) as exc:
             self.reply(400, json.dumps({'error': str(exc)}, ensure_ascii=False).encode())
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--root', type=Path, required=True)
-    parser.add_argument('--candidates', type=Path, required=True)
-    parser.add_argument('--work', type=Path, required=True)
-    parser.add_argument('--bind', default='127.0.0.1')
-    parser.add_argument('--port', type=int, default=8765)
-    parser.add_argument('--cert', type=Path)
-    parser.add_argument('--key', type=Path)
-    args = parser.parse_args()
-    if args.bind not in {'127.0.0.1', '::1', 'localhost'} and not (args.cert and args.key):
-        parser.error('Phone/LAN access requires a trusted TLS certificate and key; no public hosting')
-    server = ThreadingHTTPServer((args.bind, args.port), Handler)
-    server.store = ReviewStore(args.root, args.candidates, args.work)
-    server.token = secrets.token_urlsafe(32)
-    if args.cert and args.key:
-        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-        context.load_cert_chain(args.cert, args.key)
-        server.socket = context.wrap_socket(server.socket, server_side=True)
-    scheme = 'https' if args.cert and args.key else 'http'
-    print(f'Private local review: {scheme}://{args.bind}:{server.server_port}/#{server.token}', flush=True)
-    print('Keep this local address private. Ctrl-C stops the server. Drafts stay in --work.', flush=True)
-    try:
-        server.serve_forever()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        server.server_close()
 
 if __name__ == '__main__':
     main()
