@@ -7,3 +7,10 @@ Python 3.11 or newer is required. Install requirements-test.txt, then run unitte
 ## File placement (enforced)
 
 Decide where a file lives BEFORE creating it. The contract in `.repo-layout.yml` lists the allowed top-level directories, the file types permitted in each, and the required community-standards files; `python3 tools/check_repo_layout.py` enforces it in CI. A new kind of file means updating the contract in the same PR.
+
+## In-file code layout
+
+Follow the shared code-layout standard in collaboration-docs docs/CODE-LAYOUT.md.
+Order code by reading flow, put entry points before their helpers, and use
+marked section headers for longer files. Source files have a 400-line cap;
+test files have a 600-line cap and should split by topic above it.
