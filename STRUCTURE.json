@@ -71,7 +71,8 @@
         "tests.yml",
         "layout.yml",
         "vuln-scan.yml",
-        "privacy-guard.yml"
+        "privacy-guard.yml",
+        "code-layout.yml"
       ],
       "forbid": [
         "*.jpg",
