@@ -68,11 +68,12 @@
     },
     ".github/workflows": {
       "allow": [
-        "tests.yml",
+        "code-layout.yml",
+        "gemini-review.yml",
         "layout.yml",
-        "vuln-scan.yml",
         "privacy-guard.yml",
-        "code-layout.yml"
+        "tests.yml",
+        "vuln-scan.yml"
       ],
       "forbid": [
         "*.jpg",
