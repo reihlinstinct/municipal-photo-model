@@ -68,6 +68,13 @@
       "allow": [
         "*.py"
       ]
+    },
+    "worker": {
+      "allow": [
+        "*.mjs",
+        "*.toml",
+        "*.md"
+      ]
     }
   }
 }

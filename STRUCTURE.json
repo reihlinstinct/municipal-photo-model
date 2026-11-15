@@ -287,7 +287,8 @@
         "test_public_checks.py",
         "test_run_safety.py",
         "test_review_server.py",
-        "review_browser_check.py"
+        "review_browser_check.py",
+        "test_photo_labeler_worker.py"
       ],
       "forbid": [
         "*.jpg",
@@ -315,7 +316,8 @@
         "test_public_checks.py",
         "test_run_safety.py",
         "test_review_server.py",
-        "review_browser_check.py"
+        "review_browser_check.py",
+        "test_photo_labeler_worker.py"
       ]
     },
     "review": {
@@ -377,6 +379,41 @@
         "*.mp3"
       ],
       "required": []
+    },
+    "worker": {
+      "allow": [
+        "photo-labeler.mjs",
+        "mark-page.mjs",
+        "wrangler.toml",
+        "README.md"
+      ],
+      "forbid": [
+        "*.jpg",
+        "*.jpeg",
+        "*.png",
+        "*.csv",
+        "*.parquet",
+        "*.zip",
+        "*.pdf",
+        "*.gif",
+        "*.bmp",
+        "*.tif",
+        "*.tiff",
+        "*.mp4",
+        "*.svg",
+        "*.mov",
+        "*.webm",
+        "*.avi",
+        "*.jfif",
+        "*.wav",
+        "*.mp3"
+      ],
+      "required": [
+        "photo-labeler.mjs",
+        "mark-page.mjs",
+        "wrangler.toml",
+        "README.md"
+      ]
     }
   }
 }
