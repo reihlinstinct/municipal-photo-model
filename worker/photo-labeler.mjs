@@ -31,6 +31,7 @@ const SETS = {
   },
 };
 const SOURCES = ["human", "grok"];
+const BOT_SOURCES = SOURCES.filter((s) => s !== "human");
 
 // ===== HTTP helpers and bearer auth =====
 const json = (o, init = {}) =>
@@ -40,8 +41,9 @@ const unauthorized = () => json({ error: "unauthorized" }, { status: 401 });
 function okAuth(req, env, url) {
   const h = req.headers.get("authorization") || "";
   if (h === `Bearer ${env.LABEL_KEY}`) return true;
-  if (url.searchParams.get("key") === env.LABEL_KEY) return true;
-  return false;
+  // Query key is for the browser page only; bots must use the Authorization header.
+  if (url.pathname === "/mcp" || url.pathname === "/api/export") return false;
+  return url.searchParams.get("key") === env.LABEL_KEY;
 }
 
 // ===== KV store access =====
@@ -111,7 +113,7 @@ const TOOLS = [
     description: "Get the next image awaiting a label from a set, for your source identity. Returns id, image_url (fetch with the same bearer key) and remaining count.",
     inputSchema: { type: "object", properties: {
       set: { type: "string", enum: Object.keys(SETS) },
-      source: { type: "string", enum: SOURCES, description: "Your identity: bots must use their own name, never 'human'." } },
+      source: { type: "string", enum: BOT_SOURCES, description: "Your identity: bots must use their own name, never 'human'." } },
       required: ["set", "source"] } },
   { name: "submit_label",
     description: "Submit a label for one image. verdict is the per-image call; marks are normalized (0-1) points on each offending car (empty if none). Stored under your source; never overwrites another source.",
@@ -120,7 +122,7 @@ const TOOLS = [
       id: { type: "string" },
       verdict: { type: "string", enum: ["all_legal", "some_illegal", "none_legal", "unsure"] },
       marks: { type: "array", items: { type: "object", properties: { x: { type: "number" }, y: { type: "number" } }, required: ["x", "y"] } },
-      source: { type: "string", enum: SOURCES } },
+      source: { type: "string", enum: BOT_SOURCES } },
       required: ["set", "id", "verdict", "source"] } },
   { name: "get_progress",
     description: "Labeling progress per set and per source (human vs bot counts stay separate).",
@@ -128,6 +130,7 @@ const TOOLS = [
 ];
 
 async function callTool(env, name, args = {}) {
+  if (args.source === "human") return { error: "MCP callers must not use source 'human'" };
   if (name === "get_next_unlabeled") {
     if (!SETS[args.set]) return { error: "unknown set" };
     const n = await nextUnlabeled(env, args.set, args.source || "grok");
@@ -366,7 +369,7 @@ export default {
 
     if (path === "/api/label" && req.method === "POST") {
       let b; try { b = await req.json(); } catch { return json({ error: "bad json" }, { status: 400 }); }
-      return json(await submitLabel(env, b.set, b.source || "human", b.id, b.verdict, b.marks));
+      return json(await submitLabel(env, b.set, "human", b.id, b.verdict, b.marks));
     }
 
     if (path === "/api/export") {

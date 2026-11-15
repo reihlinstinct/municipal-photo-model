@@ -31,8 +31,8 @@ The bearer key is a Worker secret (`LABEL_KEY`), never committed.
 - Web page: `https://<worker>.workers.dev/?set=<set>` - a key-entry screen
   stores the key in the browser; verdict keys 1-4, arrows navigate.
 - MCP: `POST https://<worker>.workers.dev/mcp` with
-  `Authorization: Bearer <key>`.
-- Export: `GET /api/export?set=<set>&key=<key>` returns labels grouped by
+  `Authorization: Bearer <key>`. The `?key=` query form is accepted only by the browser page's own routes (never `/mcp` or `/api/export`); MCP callers must use the header and must not use source `human` (the page is the only writer of `human` labels).
+- Export: `GET /api/export?set=<set>` with the `Authorization: Bearer` header returns labels grouped by
   source.
 
 ## Test

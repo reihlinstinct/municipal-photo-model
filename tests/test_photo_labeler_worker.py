@@ -47,6 +47,25 @@ class PhotoLabelerWorkerTests(unittest.TestCase):
         self.assertIn('unauthorized', self.text)
         self.assertIn('authorization', self.text.lower())
 
+    def test_mcp_cannot_write_as_human(self):
+        # A bot over MCP must never write or queue as source 'human' (review finding).
+        self.assertIn('BOT_SOURCES', self.text)
+        self.assertIn("MCP callers must not use source 'human'", self.text)
+        self.assertNotIn('enum: SOURCES, description', self.text)
+
+    def test_page_label_route_forces_human(self):
+        # The browser page always writes as 'human'; a page caller cannot pose as a bot.
+        self.assertIn('submitLabel(env, b.set, "human"', self.text)
+        self.assertNotIn('b.source || "human"', self.text)
+
+    def test_query_key_rejected_for_mcp_and_export(self):
+        # ?key= is for the browser page only; /mcp and /api/export need the header.
+        m = re.search(r'function okAuth.*?\n}', self.text, re.S)
+        self.assertIsNotNone(m)
+        body = m.group(0)
+        self.assertIn('"/mcp"', body)
+        self.assertIn('"/api/export"', body)
+
     def test_no_long_numeric_identifiers(self):
         for path in WORKER.iterdir():
             if path.is_file():
