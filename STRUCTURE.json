@@ -153,7 +153,8 @@
       "allow": [
         "DESIGN.md",
         "RUN-SAFETY.md",
-        "LABEL-REVIEW.md"
+        "LABEL-REVIEW.md",
+        "INDEPENDENT-CLASSIFIERS.md"
       ],
       "forbid": [
         "*.jpg",
@@ -219,7 +220,11 @@
         "train_bounded.py",
         "training_worker.py",
         "review_server.py",
-        "predict.py"
+        "predict.py",
+        "train_independent.py",
+        "independent_worker.py",
+        "independent_model.py",
+        "independent_data.py"
       ],
       "forbid": [
         "*.jpg",
@@ -288,7 +293,8 @@
         "test_run_safety.py",
         "test_review_server.py",
         "review_browser_check.py",
-        "test_photo_labeler_worker.py"
+        "test_photo_labeler_worker.py",
+        "test_independent.py"
       ],
       "forbid": [
         "*.jpg",
