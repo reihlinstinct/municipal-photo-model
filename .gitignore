@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+data/
+images/
+local-private/
+*.zip
+.ipynb_checkpoints/
+
+# Local Cloudflare deploy config with account/KV ids (see worker/README.md)
+worker/wrangler.local.toml

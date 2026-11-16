@@ -1,0 +1,6 @@
+[project]
+name = "municipal-photo-model"
+version = "0.1.0"
+requires-python = ">=3.11"
+description = "Local municipal photo preparation with synthetic tests"
+license = "MIT"

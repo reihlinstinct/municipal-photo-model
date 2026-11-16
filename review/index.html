@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>סקירת תוויות פרטית</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<body><main>
+<header><span class="tag">מקומי ופרטי · ללא העלאת תמונות</span><h1>סקירת תוויות</h1><p>מאשרים רק מה שבדקתם. לא בטוחים? שומרים טיוטה או מוציאים מהאימון.</p></header>
+<p id="message" role="status" aria-live="polite">טוען…</p>
+<section id="app" hidden>
+<nav aria-label="ניווט תמונות"><button id="prev">הקודמת</button><strong id="position" dir="ltr"></strong><button id="next">הבאה</button></nav>
+<p id="progress"></p><label>מעבר לתמונה<select id="jump"></select></label>
+<section class="panel"><h2>1. התמונה ורכב היעד</h2><p id="identity" dir="ltr"></p>
+<div class="actions"><button id="targetMode">סימון הרכב</button><button id="plateMode">סימון הלוחית</button><button id="cancelMode">ביטול סימון</button></div>
+<p id="drawHelp">לסימון תיבה: בוחרים רכב או לוחית ואז נוגעים בשתי פינות נגדיות. התיבה היא לפי התמונה המקורית.</p>
+<label>הגדלה לצורך סימון מדויק <input id="zoom" type="range" min="1" max="4" step="0.25" value="1"></label>
+<div id="imageWell" dir="ltr"><canvas id="photo" aria-label="תמונת הדיווח. סימון בשתי נגיעות או בשדות הקואורדינטות למטה"></canvas></div>
+<div id="coordinates"></div><p class="caption">תיבה: x1, y1, x2, y2 בפיקסלים. רכב בטורקיז, לוחית בכתום. אפשר לתקן מספרים או לסמן שוב.</p>
+</section>
+<section class="panel"><h2>2. סיווג העירייה וההפרעה</h2><details><summary>נתוני המקור וההצעה, לא תוויות מאושרות</summary><pre id="source" dir="ltr"></pre></details>
+<p>יש לבדוק את סיווג העירייה מול הדיווח המקורי. התמונה לבדה לא מוכיחה אירוע או עבירה.</p>
+<label>סיווג העירייה המדויק<input id="municipal" type="text" autocomplete="off"></label><div id="labels"></div>
+<label class="check"><input id="event" type="checkbox">בדקתי את האירוע וסיווג העירייה מול מקור הדיווח</label>
+<label class="check"><input id="visual" type="checkbox">בדקתי את התמונה ובחרתי את רכב היעד הנכון</label>
+</section>
+<section class="panel"><h2>3. לוחית הרכב</h2><label>מצב הלוחית<select id="plateStatus"><option value="unknown">לא נבדק</option><option value="readable">נראית וקריאה</option><option value="unreadable">נראית אך לא קריאה</option><option value="not_visible">לא נראית בתמונה</option></select></label>
+<label>טקסט הלוחית, רק אם קריאה<input id="plateText" type="text" dir="ltr" autocomplete="off" inputmode="numeric"></label><p class="caption">אין לנחש ספרות. לוחית נראית דורשת תיבה גם כשהטקסט לא קריא.</p></section>
+<section class="panel"><h2>4. החלטת הסקירה</h2><label>קבוצת תמונות, לקריאה בלבד<input id="group" dir="ltr" readonly></label>
+<label>חלוקה לקבוצה כולה<select id="split"><option value="unassigned">טרם נקבע</option><option value="train">אימון (train)</option><option value="val">כיול (val)</option><option value="test">בדיקה (test)</option></select></label><p class="caption">יש לבחור אותה חלוקה בכל תמונות הקבוצה. הייצוא חוסם זליגת קבוצות. אין להסתכל על תוצאות הבדיקה כדי לבחור חלוקה.</p>
+<label>שם הסוקר/ת<input id="reviewer" autocomplete="name"></label><label>הערות<textarea id="notes" rows="2"></textarea></label><label>סיבה להוצאה מהאימון<textarea id="reason" rows="2"></textarea></label>
+<div class="actions"><button id="draft">שמירת טיוטה</button><button id="approve" class="primary">אישור תמונה</button><button id="exclude">הוצאה מהאימון</button></div>
+</section>
+<section class="panel"><h2>ייצוא</h2><p>קודם מאשרים או מוציאים את כל התמונות. צריך קבוצות לאימון, לכיול ולבדיקה ודוגמאות חיוביות ושליליות מכל סוג באימון.</p><button id="export">ייצוא manifest.reviewed.json</button><p>הסקירה נשמרת במחשב שמריץ את הכלי. הייצוא לא מעלה דבר לקאגל ולא מתחיל אימון.</p></section>
+</section></main></body></html>
