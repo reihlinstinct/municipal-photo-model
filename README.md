@@ -19,6 +19,17 @@ Optional local image preparation re-encodes pixels without metadata, leaves orig
 
 See [contributing](CONTRIBUTING.md), [security](SECURITY.md), [accessibility](ACCESSIBILITY.md), [conduct](CODE_OF_CONDUCT.md) and [MIT license](LICENSE). Structure rules enforce required root files and per-folder allow/forbid/required inventories in CI.
 
+
+## Photo labeler (Cloudflare Worker)
+
+`worker/` holds the photo-labeler Worker: a Hebrew RTL labeling web page
+(phone-first, responsive on desktop, keyboard shortcuts), a tap-marking page
+for marking offending cars on already-labeled positives, and a hosted MCP
+endpoint so review bots label the same pools. Human and bot labels are stored
+under per-source keys and never overwrite each other. Deploy instructions and
+privacy notes are in `worker/README.md`; no photos, labels, keys or namespace
+ids live in this repository.
+
 ## Privacy scanner limits
 
 The scanner deliberately fails closed. Space-separated numeric lists can resemble phone numbers and be flagged even when they are harmless (for example, a list of ports). Write number lists with commas. This is an accepted false positive, not evidence of private data. A passing scan still does not prove privacy: manual review is required, and unsupported secrets or personal text may evade pattern checks.
