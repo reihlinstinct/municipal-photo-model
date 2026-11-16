@@ -140,7 +140,13 @@ def main():
     try:
         with open(os.devnull, 'w') as sink, contextlib.redirect_stdout(sink), contextlib.redirect_stderr(sink):
             run(args, emit)
-    except Exception:
+    except Exception as exc:
+        # Private diagnostics omit exception text, inputs, paths and local values.
+        import traceback
+        failure = {'error_type': type(exc).__name__, 'frames': [
+            {'file': Path(f.filename).name, 'line': f.lineno, 'function': f.name}
+            for f in traceback.extract_tb(exc.__traceback__)]}
+        (Path(args.output) / (args.label + '-failure.json')).write_text(json.dumps(failure))
         return 1
     return 0
 
