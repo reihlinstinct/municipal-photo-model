@@ -17,6 +17,7 @@ def read_manifest(root, filename, progress=lambda: None):
     groups, hashes = {}, {}
     seen_images = set()
     for row in rows:
+        _validate_row_shape(row)
         status = row['review_status']
         if status not in {'approved_visual_event_and_target', 'approved_image_level_human',
                           'approved_image_level_agent'}:
@@ -46,6 +47,18 @@ def read_manifest(root, filename, progress=lambda: None):
     if {r['split'] for r in rows} != {'train', 'val', 'test'}:
         raise ValueError('Need all three splits')
     return rows
+
+
+def _validate_row_shape(row):
+    """Reject malformed structure before indexing or using hash-based checks."""
+    if not isinstance(row, dict):
+        raise ValueError('Malformed manifest row')
+    string_fields = ('review_status', 'split', 'image', 'image_sha256', 'group_id')
+    if any(not isinstance(row.get(key), str) or not row[key] for key in string_fields):
+        raise ValueError('Missing or invalid manifest field')
+    states = row.get('label_state')
+    if not isinstance(states, dict) or any(not isinstance(states.get(label), str) for label in LABELS):
+        raise ValueError('Missing or invalid label state')
 
 
 def class_rows(rows, label, split):

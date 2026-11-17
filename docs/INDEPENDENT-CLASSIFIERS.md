@@ -22,7 +22,8 @@ python scripts/train_independent.py --root PRIVATE_ROOT --manifest manifest.revi
 ```
 
 The manifest must have train, val and test rows, image_sha256, group_id,
-label_state and review_status. Unknown labels are excluded independently for
+label_state and review_status. Missing fields, non-object rows and invalid field
+types raise ValueError before image access. Unknown labels are excluded independently for
 each class, not converted to negatives. Images must resolve inside the dataset
 root. SHA/group cross-split collisions fail closed. Image-level review may use
 approved_image_level_agent; the historical approved_image_level_human enum is
@@ -40,8 +41,18 @@ transcriptions. Keep real data and checkpoints private.
 Thresholds maximize validation F1 on the fixed 0.10 to 0.90 grid (0.05 step),
 with the higher threshold winning ties. Every class needs positive and negative
 examples in train and validation; otherwise stop rather than invent a threshold.
-Test results include precision, recall, F1 and known/positive counts. A separate
-frozen expanded test must be evaluated after training with those same thresholds.
+The worker evaluates only the manifest's single `test` split and writes its
+precision, recall, F1 and known/positive counts. It does not load or evaluate a
+second expanded test manifest.
+
+**Required manual follow-up before considering promotion:** the operator must
+load each saved binary checkpoint with `independent_model.load_checkpoint`,
+score the separately frozen expanded test images using the same preprocessing,
+and apply the threshold returned by that loader without retuning it. Exclude
+unknown labels per class, report precision/recall/F1 and known/positive counts,
+and compare both benchmarks with the champion. Keep this separate evaluation's
+results and data private. The training command does not automate or verify this
+manual step; a successful training exit does not mean it has been completed.
 No test-driven threshold tuning and no automatic promotion. Frozen tests reused
 across experiments are development benchmarks, not an untouched final test.
 

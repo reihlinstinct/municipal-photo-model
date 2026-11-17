@@ -75,6 +75,42 @@ class ManifestTests(unittest.TestCase):
             self.read()
 
 
+    def test_missing_required_keys_raise_value_error(self):
+        original = copy.deepcopy(self.rows)
+        for key in ('review_status', 'split', 'image', 'image_sha256', 'group_id', 'label_state'):
+            with self.subTest(key=key):
+                self.rows = copy.deepcopy(original)
+                del self.rows[0][key]
+                with self.assertRaises(ValueError):
+                    self.read()
+        for label in LABELS:
+            with self.subTest(label=label):
+                self.rows = copy.deepcopy(original)
+                del self.rows[0]['label_state'][label]
+                with self.assertRaises(ValueError):
+                    self.read()
+
+    def test_malformed_rows_and_field_types_raise_value_error(self):
+        original = copy.deepcopy(self.rows)
+        for invalid in (None, [], 'synthetic', 1):
+            with self.subTest(row=invalid):
+                self.rows = copy.deepcopy(original)
+                self.rows[0] = invalid
+                with self.assertRaises(ValueError):
+                    self.read()
+        for key in ('review_status', 'split', 'image', 'image_sha256', 'group_id', 'label_state'):
+            for invalid in (None, [], 1):
+                with self.subTest(key=key, value=invalid):
+                    self.rows = copy.deepcopy(original)
+                    self.rows[0][key] = invalid
+                    with self.assertRaises(ValueError):
+                        self.read()
+        self.rows = copy.deepcopy(original)
+        self.rows[0]['label_state'][LABELS[0]] = []
+        with self.assertRaises(ValueError):
+            self.read()
+
+
 class MetricsTests(unittest.TestCase):
     def test_val_threshold_and_tie(self):
         self.assertEqual(select_threshold([0, 1], [.1, .8]), .8)
