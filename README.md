@@ -43,3 +43,10 @@ classification and baseline labels, with explicit human approvals and group-safe
 exports. It never uploads data or starts training. See [label review](docs/LABEL-REVIEW.md)
 for input schema, local/phone access, privacy rules and the private dataset return
 workflow. Real input and review state must remain outside this public checkout.
+
+## Isolated per-class experiment
+
+The opt-in [independent classifiers path](docs/INDEPENDENT-CLASSIFIERS.md) trains
+three binary ResNet18 models sequentially with unshared backbones. It does not
+replace the champion or the legacy prediction command. Private GPU execution
+and validation-selected thresholds are required; no performance gain is assumed.
